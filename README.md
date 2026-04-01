@@ -28,10 +28,10 @@ fields/
 ├── ftw_oneshot.py              # Шаг 2-4: поиск тайлов, скачивание, инференс
 ├── validate_iou.py             # Шаг 5: валидация IoU
 ├── site_geo.py                 # Вспомогательные геоопераци
-├── cultures_kmls/              # ⛔ Закрытые данные (KML с полигонами полей)
+├── cultures_kmls/              #  Закрытые данные 
 ├── data/
 │   ├── .gitkeep
-│   └── cultures_polygons_dataset.csv  # ⛔ Закрытые данные (собранный CSV)
+│   └── cultures_polygons_dataset.csv  #  Закрытые данные 
 └── outputs/ftw/                # Результаты прогонов (не в git)
     └── <год>_tile_<MGRS>/
         ├── manifest.json
@@ -41,10 +41,6 @@ fields/
         ├── *_ftw_boundaries.gpkg
         └── *_validation_iou_*.csv/json
 ```
-
-**Закрытые данные** (`cultures_kmls/`, `data/cultures_polygons_dataset.csv`) — не публикуются.
-Пользователь предоставляет свои KML или CSV в том же формате.
-
 ---
 
 ## Установка

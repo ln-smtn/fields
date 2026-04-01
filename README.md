@@ -28,10 +28,10 @@ fields/
 ├── ftw_oneshot.py              # Шаг 2-4: поиск тайлов, скачивание, инференс
 ├── validate_iou.py             # Шаг 5: валидация IoU
 ├── site_geo.py                 # Вспомогательные геоопераци
-├── cultures_kmls/              #  Закрытые данные 
+├── 
 ├── data/
 │   ├── .gitkeep
-│   └── cultures_polygons_dataset.csv  #  Закрытые данные 
+│   └── .csv  #   данные 
 └── outputs/ftw/                # Результаты прогонов (не в git)
     └── <год>_tile_<MGRS>/
         ├── manifest.json
@@ -101,7 +101,7 @@ uv run python -c "import geopandas; print('ok')"
 
 ### Шаг 1. Подготовка датасета (KML → CSV)
 
-Положите KML-файлы в папку `cultures_kmls/`. Имя каждого файла: `<культура>_<год>.kml`
+Положите файлы в папку `cultures_/`. Имя каждого файла: `<культура>_<год>.`
 с `Polygon` в WGS84.
 
 ```bash

@@ -1,0 +1,15 @@
+[project]
+name = "fields"
+version = "0.1.0"
+description = "Культуры из KML, bbox, подготовка и запуск FTW oneshot в одном окружении uv."
+readme = "README.md"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+    "ftw-tools",
+    "geopandas>=1,<2",
+    "mgrs>=1.5.4",
+    "shapely>=2",
+]
+
+[tool.uv.sources]
+ftw-tools = { path = "ftw-baselines", editable = true }

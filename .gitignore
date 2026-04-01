@@ -1,0 +1,18 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Результаты прогонов
+outputs/
+
+# Закрытые данные — не публикуются
+cultures_kmls/
+data/cultures_polygons_dataset.csv
+
+# FTW — клонируется пользователем отдельно (git clone)
+ftw-baselines/
+
+# Служебные файлы SQLite (QGIS WAL)
+*.gpkg-shm
+*.gpkg-wal

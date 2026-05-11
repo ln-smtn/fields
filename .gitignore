@@ -8,7 +8,7 @@ outputs/
 
 # Закрытые данные — не публикуются
 cultures_kmls/
-data/cultures_polygons_dataset.csv
+data/
 
 # FTW — клонируется пользователем отдельно (git clone)
 ftw-baselines/

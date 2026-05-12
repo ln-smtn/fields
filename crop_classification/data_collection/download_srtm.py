@@ -47,6 +47,9 @@ from rasterio.windows import from_bounds
 from shapely import wkt
 from shapely.geometry import mapping
 
+# Конфиг лежит на уровень выше (crop_classification/config.py)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from config import (
     CULTURES_CSV,
     CULTURE_TO_ID,

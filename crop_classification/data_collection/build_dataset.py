@@ -42,6 +42,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+# Конфиг лежит на уровень выше (crop_classification/config.py)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from config import (
     DATASET_DIR,
     ERA5_DIR,

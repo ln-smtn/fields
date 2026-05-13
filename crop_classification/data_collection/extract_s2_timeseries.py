@@ -352,6 +352,11 @@ def main():
     for tile_id in tiles:
         print(f"\n--- Тайл {tile_id} ---")
 
+        out_path = S2_TIMESERIES_DIR / f"{args.year}_{tile_id}.parquet"
+        if out_path.exists():
+            print(f"  Пропуск: {out_path.name} уже существует")
+            continue
+
         tile_gdf = (gdf_filtered if gdf_filtered is not None
                     else filter_polygons_by_tile(gdf, tile_id))
         if tile_gdf.empty:
@@ -373,7 +378,6 @@ def main():
             continue
 
         # 4. Сохранить Parquet
-        out_path = S2_TIMESERIES_DIR / f"{args.year}_{tile_id}.parquet"
         ts_df.to_parquet(out_path, index=False)
         size_kb = out_path.stat().st_size / 1024
         print(f"  Сохранено: {out_path} ({size_kb:.0f} КБ)")

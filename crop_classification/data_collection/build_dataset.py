@@ -135,15 +135,20 @@ def load_era5_for_point(year: int, lat: float, lon: float) -> pd.DataFrame | Non
 
 
 def load_srtm(year: int, tile: str | None) -> pd.DataFrame | None:
-    """Загрузить данные рельефа SRTM из Parquet."""
-    suffix = f"_{tile}" if tile else ""
-    path = SRTM_DIR / f"{year}{suffix}.parquet"
-    if not path.exists():
-        print(f"  Нет SRTM данных: {path} — каналы будут замаскированы")
-        return None
-    df = pd.read_parquet(path)
-    print(f"  SRTM: {len(df)} полигонов")
-    return df
+    """Загрузить SRTM. Сначала ищем per-tile файл, потом per-year (фильтрация
+    по row_id всё равно идёт в build_field_sample, так что per-year подходит)."""
+    candidates = []
+    if tile:
+        candidates.append(SRTM_DIR / f"{year}_{tile}.parquet")
+    candidates.append(SRTM_DIR / f"{year}.parquet")
+    for path in candidates:
+        if path.exists():
+            df = pd.read_parquet(path)
+            print(f"  SRTM: {len(df)} полигонов  ({path.name})")
+            return df
+    print(f"  Нет SRTM данных для {year}{'_'+tile if tile else ''} — "
+          f"каналы elevation/slope будут замаскированы")
+    return None
 
 
 # ── Нормализация ─────────────────────────────────────────────────────────
@@ -306,6 +311,11 @@ def main():
     print(f"Сборка датасета PRESTO: {args.year}, тайл {args.tile}")
     print(f"{'='*60}")
 
+    out_path = DATASET_DIR / f"{args.year}_{args.tile}.npz"
+    if out_path.exists():
+        print(f"  Пропуск: {out_path.name} уже существует")
+        return
+
     # 1. Загрузить все источники
     print(f"\nЗагрузка данных:")
     s2_df = load_s2(args.year, args.tile)
@@ -408,7 +418,6 @@ def main():
               f"{cnt:4d} ({100*cnt/len(labels):5.1f}%)")
 
     # 6. Сохранить
-    out_path = DATASET_DIR / f"{args.year}_{args.tile}.npz"
     np.savez_compressed(
         out_path,
         x=X, mask=M, dynamic_world=dynamic_world,

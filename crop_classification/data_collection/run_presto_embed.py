@@ -170,12 +170,16 @@ def main():
     print(f"Эмбеддинги PRESTO: {args.year}, тайл {args.tile}")
     print(f"{'='*60}")
 
+    out_path = DATASET_DIR / f"{args.year}_{args.tile}_embeddings.npz"
+    if out_path.exists():
+        print(f"  Пропуск: {out_path.name} уже существует")
+        return
+
     device = detect_device()
     data = load_dataset(args.year, args.tile)
     embeddings = compute_embeddings(data, device, args.batch_size)
 
     # Сохранить
-    out_path = DATASET_DIR / f"{args.year}_{args.tile}_embeddings.npz"
     np.savez_compressed(
         out_path,
         embeddings=embeddings,

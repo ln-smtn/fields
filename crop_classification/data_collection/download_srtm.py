@@ -210,6 +210,12 @@ def main():
     print(f"Извлечение рельефа SRTM (elevation + slope)")
     print(f"{'='*60}")
 
+    suffix = f"_{args.tile}" if args.tile else ""
+    out_path = SRTM_DIR / f"{args.year}{suffix}.parquet"
+    if out_path.exists():
+        print(f"  Пропуск: {out_path.name} уже существует")
+        return
+
     gdf = load_polygons(args.year)
 
     if args.tile:
@@ -262,8 +268,6 @@ def main():
               f"median={valid['slope'].median():.1f}°")
 
     # Сохранить
-    suffix = f"_{args.tile}" if args.tile else ""
-    out_path = SRTM_DIR / f"{args.year}{suffix}.parquet"
     df.to_parquet(out_path, index=False)
     size_kb = out_path.stat().st_size / 1024
     print(f"  Сохранено: {out_path} ({size_kb:.0f} КБ)")

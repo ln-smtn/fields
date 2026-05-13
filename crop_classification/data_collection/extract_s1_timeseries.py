@@ -273,6 +273,11 @@ def main():
     gdf = load_polygons(args.year)
 
     if args.tile:
+        out_path = S1_TIMESERIES_DIR / f"{args.year}_{args.tile}.parquet"
+        if out_path.exists():
+            print(f"  Пропуск: {out_path.name} уже существует")
+            return
+
         tile_gdf = filter_polygons_by_tile(gdf, args.tile)
         if tile_gdf.empty:
             sys.exit(f"Нет полигонов на тайле {args.tile}")
@@ -292,7 +297,6 @@ def main():
         if ts_df.empty:
             sys.exit("Нет данных")
 
-        out_path = S1_TIMESERIES_DIR / f"{args.year}_{args.tile}.parquet"
         ts_df.to_parquet(out_path, index=False)
         size_kb = out_path.stat().st_size / 1024
         print(f"  Сохранено: {out_path} ({size_kb:.0f} КБ)")
@@ -312,6 +316,12 @@ def main():
 
         for tile_id in sorted(tiles):
             print(f"\n--- Тайл {tile_id} ---")
+
+            out_path = S1_TIMESERIES_DIR / f"{args.year}_{tile_id}.parquet"
+            if out_path.exists():
+                print(f"  Пропуск: {out_path.name} уже существует")
+                continue
+
             tile_gdf = filter_polygons_by_tile(gdf, tile_id)
             if tile_gdf.empty:
                 continue
@@ -328,7 +338,6 @@ def main():
             if ts_df.empty:
                 continue
 
-            out_path = S1_TIMESERIES_DIR / f"{args.year}_{tile_id}.parquet"
             ts_df.to_parquet(out_path, index=False)
             size_kb = out_path.stat().st_size / 1024
             print(f"  Сохранено: {out_path} ({size_kb:.0f} КБ)")

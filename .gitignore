@@ -10,6 +10,9 @@ outputs/
 cultures_kmls/
 data/
 
+# Логи прогонов
+logs/
+
 # FTW — клонируется пользователем отдельно (git clone)
 ftw-baselines/
 

@@ -33,6 +33,7 @@ PRESTO использует 2 канала рельефа:
 
 import argparse
 import sys
+import unicodedata
 import warnings
 from pathlib import Path
 
@@ -69,6 +70,9 @@ def load_polygons(year: int) -> gpd.GeoDataFrame:
         sys.exit(f"Нет полигонов за {year} год")
     df["geometry"] = df["geometry_wkt"].apply(wkt.loads)
     gdf = gpd.GeoDataFrame(df, geometry="geometry", crs="EPSG:4326")
+    # NFC-нормализация: «й» в CSV как i+бревис (NFD), в config.py — единый символ (NFC).
+    # Без этого 4 культуры (363 полигона за 2016) теряются при .map().
+    gdf["culture"] = gdf["culture"].apply(lambda s: unicodedata.normalize("NFC", s))
     gdf["culture_id"] = gdf["culture"].map(CULTURE_TO_ID)
     gdf["centroid_lat"] = gdf.geometry.centroid.y
     gdf["centroid_lon"] = gdf.geometry.centroid.x
@@ -105,10 +109,12 @@ def search_dem_items(bbox: list[float]) -> list:
         STAC_API_URL,
         modifier=planetary_computer.sign_inplace,
     )
+    # Для широкого bbox (например, 2016 — поля от Краснодара до Приморья, ~96°)
+    # нужно много DEM-тайлов 1°×1°. С 200 покрывалось ~20% полигонов.
     search = catalog.search(
         collections=[SRTM_COLLECTION],
         bbox=bbox,
-        max_items=200,
+        max_items=5000,
     )
     items = list(search.items())
     print(f"  Найдено {len(items)} тайлов DEM для bbox {bbox}")
